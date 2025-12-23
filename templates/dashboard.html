@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MindWatch{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem;">
+    <!-- Welcome Header -->
+    <div style="margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Hello, {{ current_user.username }}</h1>
+            <p style="color: var(--gray);">Here's your mental wellness overview for today</p>
+        </div>
+        <div>
+            <span style="font-size: 0.9rem; color: var(--gray);">Today: <span style="color: var(--light); font-weight: 500;">{{ now }}</span></span>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="glass-card fade-in delay-100" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--gray); font-size: 0.9rem;">Recent Mood</span>
+                <span class="material-icons" style="color: var(--primary);">psychology</span>
+            </div>
+            <h3 style="margin: 0; font-size: 1.8rem;" id="mood-stat">--</h3>
+            <p style="font-size: 0.8rem; color: var(--gray); margin-top: 0.5rem;">Based on last check-in</p>
+        </div>
+        
+        <div class="glass-card fade-in delay-200" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--gray); font-size: 0.9rem;">Analyses</span>
+                <span class="material-icons" style="color: var(--secondary);">analytics</span>
+            </div>
+            <h3 style="margin: 0; font-size: 1.8rem;" id="analysis-count">--</h3>
+            <p style="font-size: 0.8rem; color: var(--gray); margin-top: 0.5rem;">Total text analyses</p>
+        </div>
+        
+        <div class="glass-card fade-in delay-300" style="padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--gray); font-size: 0.9rem;">Journal Entries</span>
+                <span class="material-icons" style="color: var(--accent);">book</span>
+            </div>
+            <h3 style="margin: 0; font-size: 1.8rem;" id="journal-count">--</h3>
+            <p style="font-size: 0.8rem; color: var(--gray); margin-top: 0.5rem;">Private thoughts recorded</p>
+        </div>
+    </div>
+    
+    <!-- Main Actions -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+        <!-- Analysis Quick Start -->
+        <div class="glass-card fade-in delay-300">
+            <h3 style="margin-bottom: 1.5rem;">How are you feeling right now?</h3>
+            <div class="form-group">
+                <textarea id="quick-analysis-input" class="form-control" rows="4" placeholder="Type your thoughts here... e.g. 'I've been feeling overwhelmed lately...'" style="resize: none;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end;">
+                <button id="quick-analyze-btn" class="btn btn-primary">
+                    <span class="material-icons">analytics</span> Analyze Now
+                </button>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="/journal" class="glass-card fade-in delay-300" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; padding: 1.5rem;">
+                <div style="width: 40px; height: 40px; background: rgba(79, 70, 229, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <span class="material-icons" style="color: var(--primary);">edit</span>
+                </div>
+                <div>
+                    <h4 style="margin: 0; font-size: 1rem;">Write in Journal</h4>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--gray);">Record your day</p>
+                </div>
+                <span class="material-icons" style="margin-left: auto; color: var(--gray);">chevron_right</span>
+            </a>
+            
+            <a href="/resources" class="glass-card fade-in delay-300" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; padding: 1.5rem;">
+                <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <span class="material-icons" style="color: var(--success);">spa</span>
+                </div>
+                <div>
+                    <h4 style="margin: 0; font-size: 1rem;">Self-Help Tools</h4>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--gray);">Breathing & meditation</p>
+                </div>
+                <span class="material-icons" style="margin-left: auto; color: var(--gray);">chevron_right</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="glass-card fade-in delay-300" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0;">Recent Analysis History</h3>
+            <a href="/analysis" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">View All</a>
+        </div>
+        
+        <div id="recent-history-list" style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Loaded via JS -->
+            <div class="text-center" style="padding: 2rem; color: var(--gray);">Loading history...</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Load stats and history
+        loadDashboardData();
+        
+        // Quick Analyze
+        document.getElementById('quick-analyze-btn').addEventListener('click', async () => {
+            const text = document.getElementById('quick-analysis-input').value.trim();
+            if (!text) {
+                App.ui.toast('Please enter some text', 'error');
+                return;
+            }
+            
+            window.location.href = `/analysis?text=${encodeURIComponent(text)}`;
+        });
+    });
+    
+    async function loadDashboardData() {
+        try {
+            // Load history
+            const historyData = await App.api.get('/analysis/history?page=1');
+            
+            // Update stats (mock logic as API doesn't return counts directly yet)
+            document.getElementById('analysis-count').textContent = historyData.total;
+            
+            // Update history list
+            const list = document.getElementById('recent-history-list');
+            list.innerHTML = '';
+            
+            if (historyData.history.length === 0) {
+                list.innerHTML = '<div class="text-center" style="padding: 2rem; color: var(--gray);">No analysis history yet. Try analyzing some text!</div>';
+            } else {
+                historyData.history.slice(0, 3).forEach(item => {
+                    const el = document.createElement('div');
+                    el.style.cssText = 'padding: 1rem; background: rgba(255,255,255,0.03); border-radius: var(--radius-md); border-left: 3px solid ' + (item.prediction === 'Depressed' ? 'var(--warning)' : 'var(--success)');
+                    
+                    const date = new Date(item.date).toLocaleDateString();
+                    const confidence = Math.round(item.confidence * 100);
+                    
+                    el.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500;">${item.prediction} <span style="font-size: 0.8rem; color: var(--gray);">(${confidence}%)</span></span>
+                            <span style="font-size: 0.8rem; color: var(--gray);">${date}</span>
+                        </div>
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--gray); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.text}</p>
+                    `;
+                    list.appendChild(el);
+                });
+                
+                // Set mood stat based on latest
+                const latest = historyData.history[0];
+                document.getElementById('mood-stat').textContent = latest.prediction === 'Non-Depressed' ? 'Good' : 'Low';
+            }
+            
+            // Load journal count (separate API call)
+            const journalData = await App.api.get('/journal/?page=1');
+            document.getElementById('journal-count').textContent = journalData.total;
+            
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+        }
+    }
+</script>
+{% endblock %}

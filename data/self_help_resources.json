@@ -1,0 +1,55 @@
+{
+    "breathing": [
+        {
+            "title": "Box Breathing",
+            "duration": "4 mins",
+            "desc": "Inhale for 4s, hold for 4s, exhale for 4s, hold for 4s. Used by Navy SEALs for calm and focus."
+        },
+        {
+            "title": "4-7-8 Breathing",
+            "duration": "5 mins",
+            "desc": "Inhale for 4s, hold for 7s, exhale for 8s. Helps reduce anxiety and aids sleep."
+        },
+        {
+            "title": "Diaphragmatic Breathing",
+            "duration": "10 mins",
+            "desc": "Deep belly breathing to activate the relaxation response."
+        }
+    ],
+    "meditation": [
+        {
+            "title": "Mindfulness for Beginners",
+            "type": "Audio Guide",
+            "url": "#"
+        },
+        {
+            "title": "Body Scan Meditation",
+            "type": "Audio Guide",
+            "url": "#"
+        },
+        {
+            "title": "Loving-Kindness Meditation",
+            "type": "Audio Guide",
+            "url": "#"
+        }
+    ],
+    "activities": [
+        "Go for a 10-minute walk in nature",
+        "Drink a glass of water slowly",
+        "Write down 3 things you are grateful for",
+        "Listen to your favorite calming music",
+        "Stretch your body for 5 minutes",
+        "Call a friend or family member",
+        "Declutter one small area of your room",
+        "Take a warm shower or bath",
+        "Read a book for 15 minutes",
+        "Practice progressive muscle relaxation"
+    ],
+    "journal_prompts": [
+        "What is one thing that made you smile today?",
+        "Describe a challenge you overcame recently.",
+        "What are you looking forward to this week?",
+        "Write a letter to your future self.",
+        "List 5 things you like about yourself."
+    ]
+}

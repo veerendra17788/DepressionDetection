@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Mental Health Hub - MindWatch{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem;">
+    <h1 style="margin-bottom: 1rem;">Learning Hub</h1>
+    <p style="color: var(--gray); margin-bottom: 3rem; max-width: 700px;">
+        Educate yourself about mental health, break the stigma, and learn effective coping strategies.
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Article 1 -->
+        <article class="glass-card fade-in">
+            <div style="height: 200px; background: url('https://images.unsplash.com/photo-1544027993-37dbfe43562a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; border-radius: var(--radius-lg); margin-bottom: 1.5rem;"></div>
+            <span style="background: rgba(79, 70, 229, 0.2); color: var(--primary-light); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Education</span>
+            <h3 style="margin: 0.75rem 0;">Understanding Depression</h3>
+            <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Depression is more than just feeling sad. Learn about the biological, psychological, and social factors that contribute to it.
+            </p>
+            <a href="#" class="btn btn-outline" style="width: 100%;">Read Article</a>
+        </article>
+        
+        <!-- Article 2 -->
+        <article class="glass-card fade-in delay-100">
+            <div style="height: 200px; background: url('https://images.unsplash.com/photo-1515023115689-589c33041697?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; border-radius: var(--radius-lg); margin-bottom: 1.5rem;"></div>
+            <span style="background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Self-Care</span>
+            <h3 style="margin: 0.75rem 0;">Coping Strategies</h3>
+            <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Practical tips for managing stress, anxiety, and low mood in your daily life. Small changes can make a big difference.
+            </p>
+            <a href="#" class="btn btn-outline" style="width: 100%;">Read Article</a>
+        </article>
+        
+        <!-- Article 3 -->
+        <article class="glass-card fade-in delay-200">
+            <div style="height: 200px; background: url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; border-radius: var(--radius-lg); margin-bottom: 1.5rem;"></div>
+            <span style="background: rgba(244, 114, 182, 0.2); color: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">Myths</span>
+            <h3 style="margin: 0.75rem 0;">Myths vs. Facts</h3>
+            <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Debunking common misconceptions about mental health to reduce stigma and promote better understanding.
+            </p>
+            <a href="#" class="btn btn-outline" style="width: 100%;">Read Article</a>
+        </article>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{
+    "India": [
+        {
+            "name": "Vandrevala Foundation",
+            "number": "1860-266-2345 (24x7)",
+            "url": "https://www.vandrevalafoundation.com/"
+        },
+        {
+            "name": "iCall (TISS)",
+            "number": "9152987821 (Mon-Sat, 8 AM-10 PM)",
+            "url": "http://icallhelpline.org/"
+        },
+        {
+            "name": "AASRA",
+            "number": "9820466726 (24x7)",
+            "url": "http://www.aasra.info/"
+        },
+         {
+            "name": "Kiran Mental Health Rehabilitation Helpline",
+            "number": "1800-599-0019 (24x7)",
+            "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=1654571"
+        }
+    ],
+    "USA": [
+        {
+            "name": "National Suicide Prevention Lifeline",
+            "number": "988",
+            "url": "https://988lifeline.org/"
+        },
+        {
+            "name": "Crisis Text Line",
+            "number": "Text HOME to 741741",
+            "url": "https://www.crisistextline.org/"
+        }
+    ],
+    "UK": [
+        {
+            "name": "Samaritans",
+            "number": "116 123",
+            "url": "https://www.samaritans.org/"
+        }
+    ],
+    "Global": [
+        {
+            "name": "Befrienders Worldwide",
+            "url": "https://www.befrienders.org/"
+        },
+        {
+            "name": "IASP",
+            "url": "https://www.iasp.info/resources/Crisis_Centres/"
+        }
+    ]
+}

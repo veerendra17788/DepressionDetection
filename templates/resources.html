@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Resources - MindWatch{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem;">
+    <h1 style="margin-bottom: 2rem;">Support Resources</h1>
+    
+    <!-- Crisis Helplines -->
+    <div class="glass-card fade-in" style="margin-bottom: 3rem; border-left: 5px solid var(--danger);">
+        <h2 style="color: var(--danger); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <span class="material-icons">phone_in_talk</span> Crisis Helplines
+        </h2>
+        <div id="helplines-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <!-- Loaded via JS -->
+            <p>Loading helplines...</p>
+        </div>
+    </div>
+    
+    <!-- Self Help Tools -->
+    <div style="margin-bottom: 3rem;">
+        <h2 style="margin-bottom: 1.5rem;">Self-Help Tools</h2>
+        
+        <div class="glass-card fade-in delay-100" style="margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--secondary);">Breathing Exercises</h3>
+            <div id="breathing-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <!-- Loaded via JS -->
+            </div>
+        </div>
+        
+        <div class="glass-card fade-in delay-200">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-light);">Quick Activities</h3>
+            <ul id="activities-list" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <!-- Loaded via JS -->
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Load Helplines
+            const helplines = await App.api.get('/resources/helplines');
+            const helplineList = document.getElementById('helplines-list');
+            helplineList.innerHTML = '';
+            
+            // Flatten region based structure for display or show tabs (simplifying for now)
+            Object.entries(helplines).forEach(([region, lines]) => {
+                const regionDiv = document.createElement('div');
+                regionDiv.innerHTML = `<h4 style="margin-bottom:1rem; color:var(--light);">${region}</h4>`;
+                
+                lines.forEach(line => {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;';
+                    item.innerHTML = `
+                        <div style="font-weight: 600;">${line.name}</div>
+                        ${line.number ? `<div style="color: var(--danger); font-size: 1.1rem; margin-top: 0.25rem;">${line.number}</div>` : ''}
+                        ${line.url ? `<a href="${line.url}" target="_blank" style="color: var(--primary-light); text-decoration: underline;">Visit Website</a>` : ''}
+                    `;
+                    regionDiv.appendChild(item);
+                });
+                helplineList.appendChild(regionDiv);
+            });
+            
+            // Load Self-Help
+            const resources = await App.api.get('/resources/self-help');
+            
+            // Breathing
+            const breathingList = document.getElementById('breathing-list');
+            breathingList.innerHTML = '';
+            resources.breathing.forEach(ex => {
+                const el = document.createElement('div');
+                el.style.cssText = 'background: rgba(6, 182, 212, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(6, 182, 212, 0.2);';
+                el.innerHTML = `
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">${ex.title}</div>
+                    <div style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 0.5rem;">${ex.duration}</div>
+                    <div style="font-size: 0.9rem; color: var(--gray);">${ex.desc}</div>
+                `;
+                breathingList.appendChild(el);
+            });
+            
+            // Activities
+            const activitiesList = document.getElementById('activities-list');
+            activitiesList.innerHTML = '';
+            resources.activities.forEach(act => {
+                const el = document.createElement('li');
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+                el.style.gap = '0.75rem';
+                el.innerHTML = `
+                    <span class="material-icons" style="color: var(--success); font-size: 1.2rem;">check_circle_outline</span>
+                    <span>${act}</span>
+                `;
+                activitiesList.appendChild(el);
+            });
+            
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
+{% endblock %}

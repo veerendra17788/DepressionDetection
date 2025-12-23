@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Login - MindWatch{% endblock %}
+
+{% block content %}
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    <div class="glass-card fade-in" style="width: 100%; max-width: 450px;">
+        <div class="text-center" style="margin-bottom: 2rem;">
+            <h2>Welcome Back</h2>
+            <p style="color: var(--gray);">Sign in to access your journal and timeline</p>
+        </div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <div style="position: relative;">
+                    <span class="material-icons" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 1.2rem;">email</span>
+                    <input type="email" name="email" class="form-control" style="padding-left: 3rem;" required placeholder="you@example.com">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div style="position: relative;">
+                    <span class="material-icons" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 1.2rem;">lock</span>
+                    <input type="password" name="password" class="form-control" style="padding-left: 3rem;" required placeholder="••••••••">
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray); cursor: pointer;">
+                    <input type="checkbox"> Remember me
+                </label>
+                <a href="#" style="color: var(--primary-light);">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1.5rem;">
+                Sign In
+            </button>
+            
+            <div style="position: relative; text-align: center; margin-bottom: 1.5rem;">
+                <div style="position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                <span style="position: relative; background: #1e293b; padding: 0 1rem; color: var(--gray); font-size: 0.9rem;">Or continue with</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <button type="button" class="btn btn-outline" style="font-weight: 500;">
+                    <svg style="width: 20px; height: 20px; margin-right: 0.5rem;" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12.61C5,8.85 8.38,5.78 12.23,5.78C14.61,5.78 16.28,6.59 17.15,7.45L19.16,5.43C17.29,3.67 14.93,2.94 12,3C6.7,3 2.13,7.4 2.13,12.22C2.13,17.39 6.7,21.78 12,21.78C17.29,21.78 22.05,17.94 22.05,12.44C22.05,11.53 21.35,11.1 21.35,11.1Z" />
+                    </svg>
+                    Google
+                </button>
+                <button type="button" id="anon-login" class="btn btn-outline" style="font-weight: 500;">
+                    <span class="material-icons" style="font-size: 1.2rem; margin-right: 0.5rem; color: var(--gray);">visibility_off</span>
+                    Anonymous
+                </button>
+            </div>
+        </form>
+        
+        <p class="text-center" style="color: var(--gray);">
+            Don't have an account? <a href="/register" style="color: var(--primary-light); font-weight: 600;">Sign up</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        App.ui.showLoading(btn);
+        
+        try {
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            await App.api.post('/auth/login', data);
+            App.ui.toast('Login successful', 'success');
+            window.location.href = '/dashboard';
+        } catch (error) {
+            App.ui.toast(error.message, 'error');
+            App.ui.hideLoading(btn);
+        }
+    });
+    
+    document.getElementById('anon-login').addEventListener('click', async () => {
+        try {
+            await App.api.post('/auth/anonymous');
+            window.location.href = '/dashboard';
+        } catch (error) {
+            App.ui.toast(error.message, 'error');
+        }
+    });
+</script>
+{% endblock %}

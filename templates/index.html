@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="position: relative; padding: 6rem 0; overflow: hidden;">
+    <!-- Background Elements -->
+    <div style="position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: var(--primary); opacity: 0.1; filter: blur(100px); border-radius: 50%; z-index: -1;"></div>
+    <div style="position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: var(--secondary); opacity: 0.1; filter: blur(100px); border-radius: 50%; z-index: -1;"></div>
+    
+    <div class="container text-center">
+        <div class="fade-in">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.1;">
+                Understanding Your Mind<br>
+                <span class="text-gradient">Through the Power of AI</span>
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--gray); max-width: 700px; margin: 0 auto 2.5rem;">
+                MindWatch uses advanced natural language processing to detect early signs of depression, track emotional trends, and provide personalized support resources.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/register" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                    Start Your Journey
+                    <span class="material-icons">arrow_forward</span>
+                </a>
+                <a href="#how-it-works" class="btn btn-outline" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                    Learn More
+                </a>
+            </div>
+        </div>
+        
+        <!-- Feature Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 5rem;">
+            <div class="glass-card fade-in delay-100">
+                <div style="width: 60px; height: 60px; background: rgba(79, 70, 229, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                    <span class="material-icons" style="font-size: 2rem; color: var(--primary);">psychology</span>
+                </div>
+                <h3>AI Analysis</h3>
+                <p style="color: var(--gray);">
+                    Powered by DistilBERT, our model analyzes text patterns to identify potential emotional distress with high accuracy.
+                </p>
+            </div>
+            
+            <div class="glass-card fade-in delay-200">
+                <div style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                    <span class="material-icons" style="font-size: 2rem; color: var(--success);">timeline</span>
+                </div>
+                <h3>Emotional Tracking</h3>
+                <p style="color: var(--gray);">
+                    Visualize your mood trends over time with our interactive timeline to better understand your emotional journey.
+                </p>
+            </div>
+            
+            <div class="glass-card fade-in delay-300">
+                <div style="width: 60px; height: 60px; background: rgba(244, 114, 182, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                    <span class="material-icons" style="font-size: 2rem; color: var(--accent);">lock</span>
+                </div>
+                <h3>Private & Secure</h3>
+                <p style="color: var(--gray);">
+                    Your mental health data is private. Use our anonymous mode or encrypted journal for complete peace of mind.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how-it-works" style="padding: 5rem 0; background: rgba(15, 23, 42, 0.5);">
+    <div class="container">
+        <h2 class="text-center" style="margin-bottom: 3rem;">How MindWatch Works</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+            <div>
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Data Visualization" style="width: 100%; border-radius: var(--radius-xl); box-shadow: var(--shadow-neon);">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+                    <div>
+                        <h4>Input Your Thoughts</h4>
+                        <p style="color: var(--gray);">Write a journal entry, paste a message, or simply type how you're feeling into our secure interface.</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1.5rem;">
+                    <div style="width: 40px; height: 40px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+                    <div>
+                        <h4>Real-time Analysis</h4>
+                        <p style="color: var(--gray);">Our AI model instantly analyzes the text for linguistic patterns associated with depression and emotional distress.</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1.5rem;">
+                    <div style="width: 40px; height: 40px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+                    <div>
+                        <h4>Get Insights & Support</h4>
+                        <p style="color: var(--gray);">Receive immediate feedback, visualize your mood trends, and get personalized self-help recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding: 5rem 0;">
+    <div class="container text-center">
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto; padding: 3rem;">
+            <h2 style="margin-bottom: 1.5rem;">Ready to Prioritize Your Mental Health?</h2>
+            <p style="color: var(--gray); margin-bottom: 2rem;">
+                Join MindWatch today and take the first step towards better emotional well-being with the power of ethical AI.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/register" class="btn btn-primary">Create Free Account</a>
+                <button id="anonymous-btn" class="btn btn-outline">Try Anonymous Mode</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('anonymous-btn')?.addEventListener('click', async () => {
+        try {
+            await App.api.post('/auth/anonymous');
+            window.location.href = '/dashboard';
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
+{% endblock %}

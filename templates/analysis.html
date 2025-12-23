@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Text Analysis - MindWatch{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h1 style="margin-bottom: 1.5rem;">Depression Analysis</h1>
+        <p style="color: var(--gray); margin-bottom: 2rem;">
+            Enter text from your journals, social media posts, or thoughts to analyze emotional patterns.
+        </p>
+        
+        <div class="glass-card fade-in">
+            <div class="form-group">
+                <textarea id="analysis-input" class="form-control" rows="6" placeholder="How are you feeling today? What's on your mind?" style="resize: vertical; font-size: 1.1rem;"></textarea>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.9rem; color: var(--gray);">
+                    <span class="material-icons" style="font-size: 1rem; vertical-align: middle;">lock</span>
+                    Private & Secure
+                </span>
+                <button id="analyze-btn" class="btn btn-primary">
+                    <span class="material-icons">analytics</span> Analyze Text
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results Section (Hidden initially) -->
+        <div id="results-section" class="hidden" style="margin-top: 3rem;">
+            <h2 style="margin-bottom: 1.5rem;">Analysis Results</h2>
+            
+            <!-- Result Prediction -->
+            <div class="glass-card fade-in" style="margin-bottom: 2rem; border-left: 5px solid transparent;" id="result-card">
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <div id="result-icon-container" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span class="material-icons" style="font-size: 2rem; color: white;" id="result-icon"></span>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0;" id="result-label">--</h3>
+                        <p style="margin: 0; color: var(--gray);">Confidence: <span id="result-confidence">--</span>%</p>
+                    </div>
+                </div>
+                
+                <div id="crisis-alert" class="hidden" style="margin-top: 1.5rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md);">
+                    <div style="display: flex; align-items: center; gap: 1rem; color: var(--danger);">
+                        <span class="material-icons">warning</span>
+                        <strong>Crisis Alert Detected</strong>
+                    </div>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                        This text indicates high levels of distress. Please consider reaching out for support.
+                        <a href="/resources" style="text-decoration: underline; font-weight: 600;">View Helplines</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Explainable AI -->
+            <div class="glass-card fade-in delay-100" style="margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Word Impact Analysis</h3>
+                <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 1.5rem;">
+                    See which words most influenced the model's prediction.
+                </p>
+                <div id="attention-visualization" style="line-height: 2; font-size: 1.1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: var(--radius-md);">
+                    <!-- Impact words injected here -->
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button onclick="saveToJournal()" class="btn btn-outline">
+                    <span class="material-icons">book</span> Save to Journal
+                </button>
+                <a href="/resources" class="btn btn-outline">
+                    <span class="material-icons">spa</span> Get Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let lastAnalysisResult = null;
+    let lastText = '';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check for URL params (from dashboard quick action)
+        const urlParams = new URLSearchParams(window.location.search);
+        const text = urlParams.get('text');
+        if (text) {
+            document.getElementById('analysis-input').value = decodeURIComponent(text);
+            analyzeText(decodeURIComponent(text));
+        }
+        
+        document.getElementById('analyze-btn').addEventListener('click', () => {
+            const input = document.getElementById('analysis-input').value.trim();
+            if(!input) return App.ui.toast('Please enter text', 'error');
+            analyzeText(input);
+        });
+    });
+    
+    async function analyzeText(text) {
+        lastText = text;
+        const btn = document.getElementById('analyze-btn');
+        const resultsSection = document.getElementById('results-section');
+        
+        App.ui.showLoading(btn);
+        resultsSection.classList.add('hidden');
+        
+        try {
+            const data = await App.api.post('/analysis/analyze', { text });
+            lastAnalysisResult = data.result;
+            
+            displayResults(data.result);
+            App.ui.hideLoading(btn);
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+        } catch (error) {
+            App.ui.toast(error.message, 'error');
+            App.ui.hideLoading(btn);
+        }
+    }
+    
+    function displayResults(result) {
+        const isDepressed = result.label === 'Depressed';
+        const confidence = Math.round(result.confidence * 100);
+        
+        // Update Card Style
+        const card = document.getElementById('result-card');
+        card.style.borderLeftColor = isDepressed ? 'var(--warning)' : 'var(--success)';
+        
+        // Update Icon
+        const iconContainer = document.getElementById('result-icon-container');
+        const icon = document.getElementById('result-icon');
+        
+        if (isDepressed) {
+            iconContainer.style.background = 'var(--warning)';
+            icon.textContent = 'sentiment_dissatisfied';
+        } else {
+            iconContainer.style.background = 'var(--success)';
+            icon.textContent = 'sentiment_satisfied_alt';
+        }
+        
+        // Update Text
+        document.getElementById('result-label').textContent = isDepressed ? 'Signs of Depression Detected' : 'No Signs of Depression';
+        document.getElementById('result-confidence').textContent = confidence;
+        
+        // Crisis Alert
+        const crisisAlert = document.getElementById('crisis-alert');
+        if (result.is_crisis) {
+            crisisAlert.classList.remove('hidden');
+        } else {
+            crisisAlert.classList.add('hidden');
+        }
+        
+        // Visualization (Simple highlighting based on basic attention logic for demo)
+        // In a real implementation, we'd map tokens back to the original text properly
+        const visContainer = document.getElementById('attention-visualization');
+        visContainer.innerHTML = '';
+        
+        // Mock visualization logic if attention data is missing or complex to map 1:1 in frontend
+        // If the API returns attention tokens, we display them
+        if (result.attention && result.attention.length > 0) {
+            let html = '';
+            // Basic display of top words
+            result.attention.forEach(item => {
+                // Remove ## from subwords
+                const word = item.token.replace('##', '');
+                const intensity = item.attention * 5; // Scale for visual
+                const color = isDepressed ? `rgba(245, 158, 11, ${Math.min(intensity, 0.8)})` : `rgba(16, 185, 129, ${Math.min(intensity, 0.8)})`;
+                
+                html += `<span style="display: inline-block; padding: 2px 6px; margin: 3px; background: ${color}; border-radius: 4px;">${word}</span> `;
+            });
+            visContainer.innerHTML = html + '<div style="margin-top:10px; font-size: 0.8rem; color: var(--gray);">Top words influencing the model</div>';
+        } else {
+            visContainer.textContent = lastText;
+        }
+    }
+    
+    async function saveToJournal() {
+        if (!lastText) return;
+        
+        try {
+            await App.api.post('/journal/', {
+                content: lastText,
+                title: 'Analysis Entry - ' + new Date().toLocaleDateString()
+            });
+            App.ui.toast('Saved to journal successfully', 'success');
+            setTimeout(() => window.location.href = '/journal', 1000);
+        } catch (error) {
+            App.ui.toast(error.message, 'error');
+        }
+    }
+</script>
+{% endblock %}
