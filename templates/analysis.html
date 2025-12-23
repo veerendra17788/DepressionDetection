@@ -154,10 +154,16 @@
             const data = await App.api.post('/analysis/analyze', { text });
             lastAnalysisResult = data.result;
             
-            // Also fetch emotion breakdown
-            const emotionData = await App.api.post('/analysis/emotion-breakdown', { text });
+            // Try to fetch emotion breakdown (optional)
+            let emotionBreakdown = null;
+            try {
+                const emotionData = await App.api.post('/analysis/emotion-breakdown', { text });
+                emotionBreakdown = emotionData.breakdown;
+            } catch (emotionError) {
+                console.warn('Emotion breakdown failed, continuing without it:', emotionError);
+            }
             
-            displayResults(data.result, emotionData.breakdown);
+            displayResults(data.result, emotionBreakdown);
             App.ui.hideLoading(btn);
             resultsSection.classList.remove('hidden');
             resultsSection.scrollIntoView({ behavior: 'smooth' });
@@ -236,6 +242,14 @@
     }
     
     function displayEmotionBreakdown(breakdown) {
+        // Hide emotion section if no data
+        const emotionSection = document.querySelector('#emotion-grid').closest('.glass-card');
+        if (!breakdown) {
+            if (emotionSection) emotionSection.style.display = 'none';
+            return;
+        }
+        if (emotionSection) emotionSection.style.display = 'block';
+        
         // Mood Score
         const moodScore = breakdown.mood_score || 5;
         document.getElementById('mood-score').textContent = moodScore;
